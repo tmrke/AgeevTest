@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+</head>
+<body>
+
+<h4>Для получения результата выберете режим работы, операцию вычисления и нажмите "Получить результат"</h4>
+
+<form th:action="@{/calculate}" method="post">
+    <div>
+        <label th:for="input">Режим ввода</label>
+        <select id="input" name="input">
+            <option id="input_database" name="input" value="DATABASE">database</option>
+            <option id="input_html" name="input" value="HTML">html form</option>
+            <option id="input_json" name="input" value="JSON">json</option>
+        </select>
+    </div>
+
+    <div>
+        <label th:for="output">Режим вывода</label>
+        <select id="output" name="output">
+            <option id="output_database" name="input" value="DATABASE">database</option>
+            <option id="output_html" name="output" value="HTML">html form</option>
+            <option id="output_json" name="output" value="JSON">json</option>
+        </select>
+    </div>
+
+
+    <label th:for="operation">Операция вычисления</label>
+    <select id="operation" name="operation">
+        <option id="addition" name="addition" value="ADDITION">addition</option>
+        <option id="multiplication" name="multiplication" value="MULTIPLICATION">multiplication</option>
+        <option id="multiplication_and_addition" name="multiplication_and_addition" value="MULTIPLICATION_AND_ADDITION">
+            multiplication and addition
+        </option>
+        <option id="average" name="average" value="AVERAGE">average</option>
+    </select>
+
+    <div>
+        <button type="submit">получить результат</button>
+    </div>
+</form>
+</body>
+</html>
