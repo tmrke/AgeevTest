@@ -10,7 +10,6 @@ public class AgeevTestApplication {
 		SpringApplication.run(AgeevTestApplication.class, args);
 	}
 
-	//TODO 1. получать/записывать данные из бд
 	//TODO 2. получать/записывать данные из json
 	//TODO 1. получать/записывать данные из html form
 }

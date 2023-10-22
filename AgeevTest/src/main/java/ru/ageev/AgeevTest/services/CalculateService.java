@@ -10,15 +10,16 @@ import java.util.List;
 
 @Service
 public class CalculateService {
-   public OutputResult addition(List<InputNumber> numbers) {
+    public OutputResult addition(List<InputNumber> numbers) {
         OutputResult outputResult = new OutputResult();
 
-        try {
-            double result = numbers.stream().mapToDouble(InputNumber::getNumber).sum();
-            setDataOutputResult(result, OperationType.ADDITION.name(), outputResult);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException(e.getMessage());
+        if (numbers.isEmpty()) {
+            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            return outputResult;
         }
+
+        double result = numbers.stream().mapToDouble(InputNumber::getNumber).sum();
+        setDataOutputResult(result, OperationType.ADDITION.name(), outputResult);
 
         return outputResult;
     }
@@ -27,15 +28,16 @@ public class CalculateService {
         double result = 1;
         OutputResult outputResult = new OutputResult();
 
-        try {
-            for (InputNumber number : numbers) {
-                result *= number.getNumber();
-            }
-
-            setDataOutputResult(result, OperationType.MULTIPLICATION.name(), outputResult);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException(e.getMessage());
+        if (numbers.isEmpty()) {
+            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            return outputResult;
         }
+
+        for (InputNumber number : numbers) {
+            result *= number.getNumber();
+        }
+
+        setDataOutputResult(result, OperationType.MULTIPLICATION.name(), outputResult);
 
         return outputResult;
     }
@@ -43,11 +45,16 @@ public class CalculateService {
     public OutputResult multiplicationAndAddition(List<InputNumber> numbers) {
         OutputResult outputResult = new OutputResult();
 
+        if (numbers.isEmpty()) {
+            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            return outputResult;
+        }
+
         try {
             double result = numbers.get(0).getNumber() * numbers.get(1).getNumber() + numbers.get(2).getNumber();
             setDataOutputResult(result, OperationType.MULTIPLICATION_AND_ADDITION.name(), outputResult);
-        } catch (NumberFormatException | NullPointerException e) {
-            throw new NumberFormatException(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            outputResult.setMessage("Введено менее трех значений, вычисление невозможно");
         }
 
         return outputResult;
@@ -56,12 +63,13 @@ public class CalculateService {
     public OutputResult average(List<InputNumber> numbers) {
         OutputResult outputResult = new OutputResult();
 
-        try {
-            double result = numbers.stream().mapToDouble(InputNumber::getNumber).average().orElse(0);
-            setDataOutputResult(result, OperationType.AVERAGE.name(), outputResult);
-        } catch (NumberFormatException | NullPointerException e) {
-            throw new NumberFormatException(e.getMessage());
+        if (numbers.isEmpty()) {
+            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            return outputResult;
         }
+
+        double result = numbers.stream().mapToDouble(InputNumber::getNumber).average().orElse(0);
+        setDataOutputResult(result, OperationType.AVERAGE.name(), outputResult);
 
         return outputResult;
     }

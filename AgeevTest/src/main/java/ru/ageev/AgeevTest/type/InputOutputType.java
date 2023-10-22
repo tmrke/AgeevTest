@@ -3,5 +3,6 @@ package ru.ageev.AgeevTest.type;
 public enum InputOutputType {
     DATABASE,
     JSON,
-    HTML
+    HTML,
+    HTML_WITH_DATA
 }

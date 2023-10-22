@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Input form</title>
+</head>
+<body>
+<form th:action="@{/calculate}" method="post">
+    <label for="numbers">Введите числа через пробел</label>
+    <input type="text" id="numbers" name="numbers"/>
+
+    <label for="input"></label>
+    <input id="input" name="input" th:value="${input}" hidden/>
+
+    <label for="output"></label>
+    <input type="text" id="output" name="output" th:value="${output}" hidden/>
+
+    <label for="operation"></label>
+    <input type="text" id="operation" name="operation" th:value="${operation}" hidden/>
+
+    <div>
+        <button type="submit">получить результат</button>
+    </div>
+</form>
+
+</body>
+</html>

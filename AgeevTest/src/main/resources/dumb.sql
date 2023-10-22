@@ -11,7 +11,8 @@ insert into numbers(number) value (10);
 
 create table result
 (
-    id     int primary key auto_increment,
-    result double,
-    date   datetime
+    id        int primary key auto_increment,
+    result    double,
+    operation varchar(100),
+    date      datetime
 );

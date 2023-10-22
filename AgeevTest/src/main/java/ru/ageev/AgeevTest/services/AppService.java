@@ -8,6 +8,8 @@ import ru.ageev.AgeevTest.repositories.ResultRepositories;
 import ru.ageev.AgeevTest.type.InputOutputType;
 import ru.ageev.AgeevTest.type.OperationType;
 
+import java.io.Console;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,21 +24,9 @@ public class AppService {
         this.calculateService = calculateService;
     }
 
-    public OutputResult calculate(OperationType operation, InputOutputType input, InputOutputType output) {
-
+    public OutputResult calculate(OperationType operation, InputOutputType input, InputOutputType output, String numbersString) {
         OutputResult outputResult = new OutputResult();
-
-        switch (input) {
-            case  DATABASE -> {
-                outputResult.setData(getResult(operation, input));
-            }
-
-            case JSON, HTML -> {
-                new OutputResult();
-            }
-
-            default -> new OutputResult();
-        }
+        outputResult.setData(getResult(operation, input, numbersString));
 
         switch (output) {
             case DATABASE -> {
@@ -44,43 +34,29 @@ public class AppService {
             }
             case JSON -> {
             }
-            case HTML -> {
-            }
         }
 
         return outputResult;
     }
 
+    private OutputResult getResult(OperationType operation, InputOutputType input, String numbersString) {
+        List<InputNumber> numbers = new ArrayList<>();
 
-    private List<InputNumber> getInputNumbers(InputOutputType input) {
         switch (input) {
             case DATABASE -> {
-                return numberRepositories.findAll();
+                numbers = getInputNumbersFromDb();
             }
-            case JSON -> {
+            case HTML_WITH_DATA -> {
+                numbers = getNumbersFromString(numbersString);
             }
-
         }
 
-        return null;
-    }
-
-    private OutputResult getResult(OperationType operation, InputOutputType input) {
-        List<InputNumber> numbers = getInputNumbers(input);
         switch (operation) {
             case ADDITION -> {
-                if (numbers != null) {
-                    return calculateService.addition(numbers);
-                }
-
-                return new OutputResult();
+                return calculateService.addition(numbers);
             }
             case MULTIPLICATION -> {
-                if (numbers != null) {
-                    return calculateService.multiplication(numbers);
-                }
-
-                return new OutputResult();
+                return calculateService.multiplication(numbers);
             }
             case MULTIPLICATION_AND_ADDITION -> {
                 return calculateService.multiplicationAndAddition(numbers);
@@ -91,5 +67,30 @@ public class AppService {
         }
 
         return new OutputResult();
+    }
+
+    private List<InputNumber> getInputNumbersFromDb() {
+        return numberRepositories.findAll();
+    }
+
+    private List<InputNumber> getNumbersFromString(String numbersString) {
+        String[] numberStringArray = numbersString.split(" ");
+
+        List<InputNumber> numbers = new ArrayList<>();
+
+        for (String numberString : numberStringArray) {
+            try {
+                double currentNumber = Double.parseDouble(numberString);
+                numbers.add(new InputNumber(currentNumber));
+            } catch (NumberFormatException e) {
+                System.out.println(numbersString + " не является числом");
+            }
+        }
+
+        return numbers;
+    }
+
+    private List<InputNumber> getInputNumbersFromJson() {
+        return null;
     }
 }

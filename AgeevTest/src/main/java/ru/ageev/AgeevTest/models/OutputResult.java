@@ -24,6 +24,8 @@ public class OutputResult {
     @Column(name = "date")
     private Date date;
 
+    private String message;
+
     public OutputResult() {
 
     }
@@ -71,5 +73,14 @@ public class OutputResult {
         this.result = outputResult.getResult();
         this.operation = outputResult.getOperation();
         this.date = outputResult.getDate();
+        this.message = outputResult.getMessage();
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

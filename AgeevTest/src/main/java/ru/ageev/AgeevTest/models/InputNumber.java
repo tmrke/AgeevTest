@@ -19,6 +19,10 @@ public class InputNumber {
 
     }
 
+    public InputNumber(double number) {
+        this.number = number;
+    }
+
     public int getId() {
         return id;
     }

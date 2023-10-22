@@ -5,6 +5,9 @@
     <title>Result</title>
 </head>
 <body>
-Result = <span th:text="${result}"></span>
+Result = <span th:text="${result.getResult()}"></span><br/>
+Operation = <span th:text="${result.getOperation()}"></span><br/>
+Date = <span th:text="${result.getDate()}"></span><br/>
+Message = <span th:text="${result.getMessage()}"></span><br/>
 </body>
 </html>
