@@ -1,5 +1,8 @@
 package ru.ageev.AgeevTest.services;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Service;
 import ru.ageev.AgeevTest.models.InputNumber;
 import ru.ageev.AgeevTest.models.OutputResult;
@@ -8,9 +11,9 @@ import ru.ageev.AgeevTest.repositories.ResultRepositories;
 import ru.ageev.AgeevTest.type.InputOutputType;
 import ru.ageev.AgeevTest.type.OperationType;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AppService {
@@ -28,12 +31,8 @@ public class AppService {
         OutputResult outputResult = new OutputResult();
         outputResult.setData(getResult(operation, input, numbersString));
 
-        switch (output) {
-            case DATABASE -> {
-                resultRepositories.save(outputResult);
-            }
-            case JSON -> {
-            }
+        if (Objects.requireNonNull(output) == InputOutputType.DATABASE) {
+            resultRepositories.save(outputResult);
         }
 
         return outputResult;
@@ -48,6 +47,16 @@ public class AppService {
             }
             case HTML_WITH_DATA -> {
                 numbers = getNumbersFromString(numbersString);
+            }
+            case JSON_WITH_DATA -> {
+                try {
+                    numbers = getInputNumbersFromJson(numbersString);
+                } catch (JsonSyntaxException | IllegalStateException | NullPointerException e) {
+                    OutputResult outputResult = new OutputResult();
+                    outputResult.setMessage("Ошибка формата JSON");
+
+                    return outputResult;
+                }
             }
         }
 
@@ -90,7 +99,17 @@ public class AppService {
         return numbers;
     }
 
-    private List<InputNumber> getInputNumbersFromJson() {
-        return null;
+    private List<InputNumber> getInputNumbersFromJson(String numbersString) throws JsonSyntaxException, IllegalStateException, NullPointerException {
+        Gson gson = new Gson();
+        List<InputNumber> inputNumbers = new ArrayList<>();
+
+        List<Double> doubleNumbers = gson.fromJson(numbersString, new TypeToken<List<Double>>() {
+        }.getType());
+
+        for (Double doubleNumber : doubleNumbers) {
+            inputNumbers.add(new InputNumber(doubleNumber));
+        }
+
+        return inputNumbers;
     }
 }
