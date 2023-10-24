@@ -12,6 +12,7 @@ import ru.ageev.AgeevTest.type.InputOutputType;
 import ru.ageev.AgeevTest.type.OperationType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +32,7 @@ public class AppService {
         OutputResult outputResult = new OutputResult();
         outputResult.setData(getResult(operation, input, numbersString));
 
-        if (Objects.requireNonNull(output) == InputOutputType.DATABASE) {
+        if (output.equals(InputOutputType.DATABASE)) {
             resultRepositories.save(outputResult);
         }
 
@@ -48,10 +49,13 @@ public class AppService {
             case HTML_WITH_DATA -> {
                 numbers = getNumbersFromString(numbersString);
             }
+            case URL -> {
+                numbers = getNumbersFromQueryParams(numbersString);
+            }
             case JSON_WITH_DATA -> {
                 try {
                     numbers = getInputNumbersFromJson(numbersString);
-                } catch (JsonSyntaxException | IllegalStateException | NullPointerException e) {
+                } catch (IllegalStateException | JsonSyntaxException | NullPointerException | NumberFormatException e) {
                     OutputResult outputResult = new OutputResult();
                     outputResult.setMessage("Ошибка формата JSON");
 
@@ -85,6 +89,16 @@ public class AppService {
     private List<InputNumber> getNumbersFromString(String numbersString) {
         String[] numberStringArray = numbersString.split(" ");
 
+        return getFillInputNumbers(numbersString, numberStringArray);
+    }
+
+    private List<InputNumber> getNumbersFromQueryParams(String numbersString) {
+        String[] numberStringArray = numbersString.split(",");
+
+        return getFillInputNumbers(numbersString, numberStringArray);
+    }
+
+    private List<InputNumber> getFillInputNumbers(String numbersString, String[] numberStringArray) {
         List<InputNumber> numbers = new ArrayList<>();
 
         for (String numberString : numberStringArray) {
@@ -99,11 +113,12 @@ public class AppService {
         return numbers;
     }
 
-    private List<InputNumber> getInputNumbersFromJson(String numbersString) throws JsonSyntaxException, IllegalStateException, NullPointerException {
+    private List<InputNumber> getInputNumbersFromJson(String numbersString) throws NumberFormatException, IllegalStateException, NullPointerException {
         Gson gson = new Gson();
         List<InputNumber> inputNumbers = new ArrayList<>();
+        List<Double> doubleNumbers;
 
-        List<Double> doubleNumbers = gson.fromJson(numbersString, new TypeToken<List<Double>>() {
+        doubleNumbers = gson.fromJson(numbersString, new TypeToken<List<Double>>() {
         }.getType());
 
         for (Double doubleNumber : doubleNumbers) {

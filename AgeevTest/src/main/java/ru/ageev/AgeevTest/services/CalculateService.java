@@ -14,7 +14,8 @@ public class CalculateService {
         OutputResult outputResult = new OutputResult();
 
         if (numbers.isEmpty()) {
-            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            setEmptyListMessageOutputResult(outputResult);
+
             return outputResult;
         }
 
@@ -29,7 +30,8 @@ public class CalculateService {
         OutputResult outputResult = new OutputResult();
 
         if (numbers.isEmpty()) {
-            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            setEmptyListMessageOutputResult(outputResult);
+
             return outputResult;
         }
 
@@ -46,7 +48,8 @@ public class CalculateService {
         OutputResult outputResult = new OutputResult();
 
         if (numbers.isEmpty()) {
-            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            setEmptyListMessageOutputResult(outputResult);
+
             return outputResult;
         }
 
@@ -54,6 +57,7 @@ public class CalculateService {
             double result = numbers.get(0).getNumber() * numbers.get(1).getNumber() + numbers.get(2).getNumber();
             setDataOutputResult(result, OperationType.MULTIPLICATION_AND_ADDITION.name(), outputResult);
         } catch (IndexOutOfBoundsException e) {
+            outputResult.setDate(new Date(System.currentTimeMillis()));
             outputResult.setMessage("Введено менее трех значений, вычисление невозможно");
         }
 
@@ -64,7 +68,8 @@ public class CalculateService {
         OutputResult outputResult = new OutputResult();
 
         if (numbers.isEmpty()) {
-            outputResult.setMessage("Список чисел пуст, вычисление невозможно");
+            setEmptyListMessageOutputResult(outputResult);
+
             return outputResult;
         }
 
@@ -78,5 +83,11 @@ public class CalculateService {
         outputResult.setResult(result);
         outputResult.setOperation(operation);
         outputResult.setDate(new Date(System.currentTimeMillis()));
+        outputResult.setMessage("Выполнено");
+    }
+
+    public void setEmptyListMessageOutputResult(OutputResult outputResult) {
+        outputResult.setDate(new Date(System.currentTimeMillis()));
+        outputResult.setMessage("Список чисел пуст, вычисление невозможно");
     }
 }

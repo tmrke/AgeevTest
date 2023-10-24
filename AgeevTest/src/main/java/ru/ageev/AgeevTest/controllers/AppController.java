@@ -1,7 +1,6 @@
 package ru.ageev.AgeevTest.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,29 +35,27 @@ public class AppController {
             Model model,
             RedirectAttributes redirectAttributes
     ) {
-
         OperationType operation = OperationType.valueOf(operationString);
         InputOutputType input = InputOutputType.valueOf(inputString);
         InputOutputType output = InputOutputType.valueOf(outputString);
 
-        if (input.equals(InputOutputType.HTML)) {
-            model.addAttribute("input", InputOutputType.HTML_WITH_DATA);
-            model.addAttribute("output", output);
-            model.addAttribute("operation", operation);
+        model.addAttribute("output", output);
+        model.addAttribute("operation", operation);
 
-            return "input_form";
-        }
+        switch (input) {
+            case HTML -> {
+                model.addAttribute("input", InputOutputType.HTML_WITH_DATA);
 
-        if (input.equals(InputOutputType.JSON)) {
-            model.addAttribute("input", InputOutputType.JSON_WITH_DATA);
-            model.addAttribute("output", output);
-            model.addAttribute("operation", operation);
+                return "input_form";
+            }
+            case JSON -> {
+                model.addAttribute("input", InputOutputType.JSON_WITH_DATA);
 
-            return "input_json";
+                return "input_json";
+            }
         }
 
         OutputResult result = service.calculate(operation, input, output, numbersString);
-
         redirectAttributes.addFlashAttribute("result", result);
 
         if (output.equals(InputOutputType.JSON)) {
@@ -69,7 +66,7 @@ public class AppController {
     }
 
     @GetMapping("result")
-    public String result(Model model) {
+    public String getResult(Model model) {
         OutputResult outputResult = (OutputResult) model.getAttribute("result");
         model.addAttribute("result", outputResult);
 
@@ -77,7 +74,7 @@ public class AppController {
     }
 
     @GetMapping("json_result")
-    public String jsonResult(Model model) {
+    public String getJsonResult(Model model) {
         OutputResult outputResult = (OutputResult) model.getAttribute("result");
         Gson gson = new Gson();
 
@@ -85,5 +82,26 @@ public class AppController {
 
         return "json_result";
     }
+
+    @GetMapping("input_url")
+    public String getResultFromUrl(@RequestParam("operation") String operationString,
+                                   @RequestParam("output") String outputString,
+                                   @RequestParam(value = "numbers") String numbersString,
+                                   RedirectAttributes redirectAttributes) {
+        OperationType operation = OperationType.valueOf(operationString);
+        InputOutputType output = InputOutputType.valueOf(outputString);
+
+        OutputResult result = service.calculate(operation, InputOutputType.URL, output, numbersString);
+        redirectAttributes.addFlashAttribute("result", result);
+
+        if (output.equals(InputOutputType.JSON)) {
+            return "redirect:json_result";
+        }
+
+        return "redirect:result";
+    }
+
+//http://localhost:8080/input_url?numbers=1,2,3,4&operation=ADDITION&output=HTML
+//http://localhost:8080/input_url?numbers=1,2,3,4,5,6,7&operation=ADDITION&output=DATABASE
 }
 

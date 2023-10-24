@@ -24,6 +24,7 @@ public class OutputResult {
     @Column(name = "date")
     private Date date;
 
+    @Column(name = "message")
     private String message;
 
     public OutputResult() {

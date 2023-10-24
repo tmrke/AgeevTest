@@ -6,7 +6,13 @@
 </head>
 <body>
 
-<h4>Для получения результата выберете режим работы, операцию вычисления и нажмите "Получить результат"</h4>
+<h4>Calculator</h4>
+
+<div>
+    Для получения результата выберите режим ввода, вывода и операцию вычисления
+</div>
+
+<br/>
 
 <form th:action="@{/calculate}" method="post">
     <div>
@@ -15,6 +21,8 @@
             <option id="input_database" name="input" value="DATABASE">database</option>
             <option id="input_html" name="input" value="HTML">html form</option>
             <option id="input_json" name="input" value="JSON">json</option>
+            <option id="input_url" name="input" value="URL">url</option>
+
         </select>
     </div>
 
@@ -24,6 +32,7 @@
             <option id="output_database" name="input" value="DATABASE">database</option>
             <option id="output_html" name="output" value="HTML">html form</option>
             <option id="output_json" name="output" value="JSON">json</option>
+            <option id="output_url" name="output" value="URL">url</option>
         </select>
     </div>
 
@@ -42,5 +51,13 @@
         <button type="submit">получить результат</button>
     </div>
 </form>
+
+<br/>
+<div>
+    Либо перейдите на input_url с параметрами запроса
+</div>
+<div>
+    Пример: input_url?numbers=1,2,3,4&operation=ADDITION&output=JSON
+</div>
 </body>
 </html>
