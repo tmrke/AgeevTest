@@ -12,9 +12,7 @@ import ru.ageev.AgeevTest.type.InputOutputType;
 import ru.ageev.AgeevTest.type.OperationType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AppService {
@@ -43,15 +41,12 @@ public class AppService {
         List<InputNumber> numbers = new ArrayList<>();
 
         switch (input) {
-            case DATABASE -> {
-                numbers = getInputNumbersFromDb();
-            }
-            case HTML_WITH_DATA -> {
-                numbers = getNumbersFromString(numbersString);
-            }
-            case URL -> {
-                numbers = getNumbersFromQueryParams(numbersString);
-            }
+            case DATABASE -> numbers = getInputNumbersFromDb();
+
+            case HTML_WITH_DATA -> numbers = getNumbersFromString(numbersString);
+
+            case URL -> numbers = getNumbersFromQueryParams(numbersString);
+
             case JSON_WITH_DATA -> {
                 try {
                     numbers = getInputNumbersFromJson(numbersString);
