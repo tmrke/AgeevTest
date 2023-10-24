@@ -3,6 +3,7 @@ package ru.ageev.AgeevTest.services;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.ageev.AgeevTest.models.InputNumber;
 import ru.ageev.AgeevTest.models.OutputResult;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AppService {
     private final NumberRepositories numberRepositories;
     private final ResultRepositories resultRepositories;
@@ -101,7 +103,7 @@ public class AppService {
                 double currentNumber = Double.parseDouble(numberString);
                 numbers.add(new InputNumber(currentNumber));
             } catch (NumberFormatException e) {
-                System.out.println(numbersString + " не является числом");
+                log.info(numbersString + " не является числом");
             }
         }
 

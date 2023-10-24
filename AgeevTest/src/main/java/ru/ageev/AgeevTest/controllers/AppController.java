@@ -16,6 +16,7 @@ import ru.ageev.AgeevTest.type.OperationType;
 @RequestMapping()
 public class AppController {
     private final AppService service;
+    private final static String RESULT_STRING = "result";
 
     public AppController(AppService service) {
         this.service = service;
@@ -56,7 +57,7 @@ public class AppController {
         }
 
         OutputResult result = service.calculate(operation, input, output, numbersString);
-        redirectAttributes.addFlashAttribute("result", result);
+        redirectAttributes.addFlashAttribute(RESULT_STRING, result);
 
         if (output.equals(InputOutputType.JSON)) {
             return "redirect:json_result";
@@ -65,20 +66,20 @@ public class AppController {
         return "redirect:result";
     }
 
-    @GetMapping("result")
+    @GetMapping(RESULT_STRING)
     public String getResult(Model model) {
-        OutputResult outputResult = (OutputResult) model.getAttribute("result");
-        model.addAttribute("result", outputResult);
+        OutputResult outputResult = (OutputResult) model.getAttribute(RESULT_STRING);
+        model.addAttribute(RESULT_STRING, outputResult);
 
-        return "result";
+        return RESULT_STRING;
     }
 
     @GetMapping("json_result")
     public String getJsonResult(Model model) {
-        OutputResult outputResult = (OutputResult) model.getAttribute("result");
+        OutputResult outputResult = (OutputResult) model.getAttribute(RESULT_STRING);
         Gson gson = new Gson();
 
-        model.addAttribute("result", gson.toJson(outputResult));
+        model.addAttribute(RESULT_STRING, gson.toJson(outputResult));
 
         return "json_result";
     }
@@ -92,7 +93,7 @@ public class AppController {
         InputOutputType output = InputOutputType.valueOf(outputString);
 
         OutputResult result = service.calculate(operation, InputOutputType.URL, output, numbersString);
-        redirectAttributes.addFlashAttribute("result", result);
+        redirectAttributes.addFlashAttribute(RESULT_STRING, result);
 
         if (output.equals(InputOutputType.JSON)) {
             return "redirect:json_result";
@@ -100,8 +101,5 @@ public class AppController {
 
         return "redirect:result";
     }
-
-//http://localhost:8080/input_url?numbers=1,2,3,4&operation=ADDITION&output=HTML
-//http://localhost:8080/input_url?numbers=1,2,3,4,5,6,7&operation=ADDITION&output=DATABASE
 }
 
