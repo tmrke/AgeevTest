@@ -103,7 +103,7 @@ public class AppService {
                 double currentNumber = Double.parseDouble(numberString);
                 numbers.add(new InputNumber(currentNumber));
             } catch (NumberFormatException e) {
-                log.info(numbersString + " не является числом");
+                log.info(numberString + " не является числом");
             }
         }
 
